@@ -1,5 +1,6 @@
-// Demo using arcFill to draw ellipses and a segmented elipse
-#include <TFT_eSPI.h> // Hardware-specific library
+//IR remote on an ESP32C3 Supermini
+
+#include <TFT_eSPI.h> 
 #include <SPI.h>
 #include <WiFi.h>
 #include <AsyncTCP.h>
@@ -9,9 +10,9 @@
 const char* ssid = "mikesnet";
 const char* password = "springchicken";
 
-AsyncWebServer server(80);
+AsyncWebServer server(80);  //for easy web uploading new firmware
 
-TFT_eSPI tft = TFT_eSPI();       // Invoke custom library
+TFT_eSPI tft = TFT_eSPI();       //for TFT display
 
 #include <IRremoteESP8266.h>
 #include <IRsend.h>
@@ -21,134 +22,10 @@ TFT_eSPI tft = TFT_eSPI();       // Invoke custom library
     static uint32_t __every__##interval = millis(); \
     if (millis() - __every__##interval >= interval && (__every__##interval = millis()))
 
-IRsend irsend(8);
+IRsend irsend(8); //+ side of infrared LED is on pin 8
 
-#define PanasonicAddress      0x4004     // Panasonic address (Pre data) 
-#define PanasonicPower        0x100BCBD  // Panasonic Power button
-
-#define JVCPower              0xC5E8
-
-uint16_t samsungProntoCode[72] = {
-    0x0000, 0x006D, 0x0000, 0x0022,
-    0x00ac, 0x00ac, 0x0016, 0x0040, 0x0016, 0x0040, 0x0016, 0x0040,
-    0x0016, 0x0015, 0x0016, 0x0015, 0x0016, 0x0015, 0x0016, 0x0015,
-    0x0016, 0x0015, 0x0016, 0x0040, 0x0016, 0x0040, 0x0016, 0x0040,
-    0x0016, 0x0015, 0x0016, 0x0015, 0x0016, 0x0015, 0x0016, 0x0015,
-    0x0016, 0x0015, 0x0016, 0x0040, 0x0016, 0x0015, 0x0016, 0x0015,
-    0x0016, 0x0040, 0x0016, 0x0040, 0x0016, 0x0015, 0x0016, 0x0015,
-    0x0016, 0x0040, 0x0016, 0x0015, 0x0016, 0x0040, 0x0016, 0x0040,
-    0x0016, 0x0015, 0x0016, 0x0015, 0x0016, 0x0040, 0x0016, 0x0040,
-    0x0016, 0x0015, 0x0016, 0x071c
-};
-
-// Panasonic Plasma TV Descrete code (Power On).
-// Acquired from:
-//   ftp://ftp.panasonic.com/pub/panasonic/drivers/monitors/Discrete-remote-control-codesProntoCCFformat.pdf
-// e.g.
-// 0000 0071 0000 0032 0080 003F 0010 0010 0010 0030 0010 0010 0010 0010 0010
-// 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010
-// 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010
-// 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010
-// 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010
-// 0030 0010 0030 0010 0030 0010 0030 0010 0010 0010 0010 0010 0010 0010 0030
-// 0010 0030 0010 0030 0010 0030 0010 0030 0010 0010 0010 0030 0010 0A98
-//
-// Or the equiv. of sendPanasonic64(0x400401007C7D);
-uint16_t panasonicProntoCode[104] = {
-    0x0000, 0x0071, 0x0000, 0x0032,
-    0x0080, 0x003F, 0x0010, 0x0010, 0x0010, 0x0030, 0x0010, 0x0010,
-    0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0010,
-    0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0010,
-    0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0030, 0x0010, 0x0010,
-    0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0010,
-    0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0010,
-    0x0010, 0x0030, 0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0010,
-    0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0010,
-    0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0030, 0x0010, 0x0030,
-    0x0010, 0x0030, 0x0010, 0x0030, 0x0010, 0x0030, 0x0010, 0x0010,
-    0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0030, 0x0010, 0x0030,
-    0x0010, 0x0030, 0x0010, 0x0030, 0x0010, 0x0030, 0x0010, 0x0010,
-    0x0010, 0x0030, 0x0010, 0x0A98};
-
-
-uint16_t repeat__Copy_to_Clipboard_[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 65535U };
-
-// Command #2: (Copy to Clipboard)$1
-// Protocol: Panasonic, Parameters: S=0U D=160U F=62U
-uint16_t repeat__Copy_to_Clipboard__1[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 65535U };
-
-// Command #3: (Copy to Clipboard)$2
-// Protocol: Panasonic, Parameters: S=0U D=160U F=163U
-uint16_t repeat__Copy_to_Clipboard__2[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 65535U };
-
-// Command #4: (Copy to Clipboard)$3
-// Protocol: Panasonic, Parameters: S=0U D=160U F=148U
-uint16_t repeat__Copy_to_Clipboard__3[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 65535U };
-
-// Command #5: (Copy to Clipboard)$4
-// Protocol: Panasonic, Parameters: S=0U D=160U F=146U
-uint16_t repeat__Copy_to_Clipboard__4[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 65535U };
-
-// Command #6: (Copy to Clipboard)$5
-// Protocol: Panasonic, Parameters: S=0U D=176U F=129U
-uint16_t repeat__Copy_to_Clipboard__5[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 65535U };
-
-// Command #7: (Copy to Clipboard)$6
-// Protocol: Panasonic, Parameters: S=0U D=176U F=128U
-uint16_t repeat__Copy_to_Clipboard__6[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 65535U };
-
-// Command #8: (Copy to Clipboard)$7
-// Protocol: Panasonic, Parameters: S=0U D=176U F=133U
-uint16_t repeat__Copy_to_Clipboard__7[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 65535U };
-
-// Command #9: (Copy to Clipboard)$8
-// Protocol: Panasonic, Parameters: S=0U D=176U F=134U
-uint16_t repeat__Copy_to_Clipboard__8[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 65535U };
-
-// Command #10: (Copy to Clipboard)$9
-// Protocol: Panasonic, Parameters: S=0U D=176U F=135U
-uint16_t repeat__Copy_to_Clipboard__9[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 65535U };
-
-// Command #11: (Copy to Clipboard)$10
-// Protocol: Panasonic, Parameters: S=0U D=176U F=136U
-uint16_t repeat__Copy_to_Clipboard__10[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 65535U };
-
-// Command #12: (Copy to Clipboard)$11
-// Protocol: Panasonic, Parameters: S=0U D=160U F=32U
-uint16_t repeat__Copy_to_Clipboard__11[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 65535U };
-
-// Command #13: (Copy to Clipboard)$12
-// Protocol: Panasonic, Parameters: S=0U D=160U F=33U
-uint16_t repeat__Copy_to_Clipboard__12[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 65535U };
-
-// Command #14: (Copy to Clipboard)$13
-// Protocol: Panasonic, Parameters: S=0U D=160U F=50U
-uint16_t repeat__Copy_to_Clipboard__13[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 65535U };
-
-// Command #15: (Copy to Clipboard)$14
-// Protocol: Panasonic, Parameters: S=0U D=176U F=155U
-uint16_t repeat__Copy_to_Clipboard__14[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 65535U };
-
-// Command #16: (Copy to Clipboard)$15
-// Protocol: Panasonic, Parameters: S=18U D=160U F=187U
-uint16_t repeat__Copy_to_Clipboard__15[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 65535U };
-
-// Command #17: (Copy to Clipboard)$16
-// Protocol: Panasonic, Parameters: S=0U D=176U F=130U
-uint16_t repeat__Copy_to_Clipboard__16[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 65535U };
-
-// Command #18: (Copy to Clipboard)$17
-// Protocol: Panasonic, Parameters: S=0U D=160U F=57U
-uint16_t repeat__Copy_to_Clipboard__17[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 65535U };
-
-// Command #19: (Copy to Clipboard)$18
-// Protocol: Panasonic, Parameters: S=0U D=160U F=48U
-uint16_t repeat__Copy_to_Clipboard__18[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 65535U };
-
-// Command #20: (Copy to Clipboard)$19
-// Protocol: Panasonic, Parameters: S=0U D=160U F=178U
-uint16_t repeat__Copy_to_Clipboard__19[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 65535U };
-
+// Command #1: Power
+// Protocol: Panasonic, Parameters: S=0U D=160U F=61U
 uint16_t repeat_Power[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 65535U };
 
 // Command #2: TV
@@ -273,7 +150,7 @@ uint16_t repeat_Vol__1[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432
   
   int indexnum = 1;
 
-void drawScreen(){
+void drawScreen(){  //routine to draw the currently selected infrared button on the TFT display
   tft.setCursor(20, 120);
   tft.fillScreen(TFT_BLACK);
   tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
@@ -406,7 +283,7 @@ void drawScreen(){
   }
 }
 
-void sendCode () {
+void sendCode () {  //routine to actually beam the selected infrared code through the IR LED
   switch (indexnum){
     case 1:
         irsend.sendRaw(repeat_Power, 99, 37);
@@ -506,7 +383,7 @@ void sendCode () {
 
 
 void setup(void) {
-    pinMode(9,INPUT_PULLUP);
+  pinMode(9,INPUT_PULLUP); //set 3 buttons to input with internal pullup so we don't have to fuck around with external ones just for buttons
   pinMode(10,INPUT_PULLUP);
   pinMode(20,INPUT_PULLUP);
   irsend.begin();
@@ -519,12 +396,12 @@ void setup(void) {
   tft.setTextWrap(true); // Wrap on width
   tft.setTextFont(2);
   tft.setTextSize(1);
-  tft.print("Connecting...");
+  tft.print("Connecting...");  //display wifi connection progress
   tft.setCursor(15, 25);
 
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
-      while (WiFi.status() != WL_CONNECTED) {
+      while (WiFi.status() != WL_CONNECTED) {  //delay code until wifi is connected
         delay(250);
         tft.print(".");
       } 
@@ -534,7 +411,7 @@ void setup(void) {
   tft.setCursor(15, 40);
   tft.print(ssid);
   tft.setCursor(15, 65);
-  tft.print(WiFi.localIP());
+  tft.print(WiFi.localIP());  //display SSID and IP and wait a sec
   delay(1000);
 
   Serial.println("");
@@ -550,11 +427,9 @@ void setup(void) {
   AsyncElegantOTA.begin(&server);    // Start ElegantOTA
   server.begin();
   Serial.println("HTTP server started");
-  randomSeed(analogRead(2));
 
   tft.fillScreen(TFT_BLACK);
 	tft.setCursor(0, 0);
-	tft.setTextColor(TFT_MAGENTA);
 	tft.setTextSize(2);
   drawScreen();
 }
@@ -562,27 +437,26 @@ void setup(void) {
 
 
 void loop(void) {
-   // tft.fillScreen(TFT_YELLOW);
-  if (digitalRead(20)==LOW) {
-    every(500){
-      indexnum++;
-      if (indexnum > 31) {indexnum=1;}
-      drawScreen();
+  if (digitalRead(20)==LOW) {  //if right button is pressed
+    every(500){   //debounce button
+      indexnum++;  //increase selection by one
+      if (indexnum > 31) {indexnum=1;}  //wrap around at the end
+      drawScreen();  //draw the new selection on screen
     }
   }
 
-  if (digitalRead(9)==LOW) {
-    every(501){
+  if (digitalRead(9)==LOW) {  //if left button is pressed
+    every(501){ //do all the above but the other way around
       indexnum--;
       if (indexnum < 1) {indexnum=31;}
       drawScreen();
     }
   }
 
-  if (digitalRead(10)==LOW) {
-    tft.drawCircle(200,20,5,TFT_YELLOW);
-    sendCode();
+  if (digitalRead(10)==LOW) {  //if middle button is pressed
+    tft.drawCircle(200,20,5,TFT_YELLOW);  //draw a little yellow circle so we know we're beaming IR
+    sendCode(); //beam the IR
   }
-  else {tft.drawCircle(200,20,5,TFT_BLACK);}
-  delay(10);
+  else {tft.drawCircle(200,20,5,TFT_BLACK);}  //erase said yellow circle when we've let go of the button
+  delay(10); //relax, take a breath
 }
