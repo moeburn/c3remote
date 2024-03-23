@@ -17,6 +17,10 @@ TFT_eSPI tft = TFT_eSPI();       // Invoke custom library
 #include <IRsend.h>
 #include <WiFiClient.h>
 
+#define every(interval) \
+    static uint32_t __every__##interval = millis(); \
+    if (millis() - __every__##interval >= interval && (__every__##interval = millis()))
+
 IRsend irsend(8);
 
 #define PanasonicAddress      0x4004     // Panasonic address (Pre data) 
@@ -266,8 +270,239 @@ uint16_t repeat_Vol_[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U,
 // Command #31: Vol-
 // Protocol: Panasonic, Parameters: S=0U D=160U F=33U
 uint16_t repeat_Vol__1[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 65535U };
+  
+  int indexnum = 1;
 
+void drawScreen(){
+  tft.setCursor(20, 120);
+  tft.fillScreen(TFT_BLACK);
+  tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
 
+  switch (indexnum){
+    case 1:
+        tft.print("POWER ");
+        tft.print(indexnum);
+        break;
+    case 2:
+        tft.print("TV ");
+        tft.print(indexnum);
+        break;
+    case 3:
+        tft.print("VCR ");
+        tft.print(indexnum);
+        break;
+    case 4:
+        tft.print("VDP ");
+        tft.print(indexnum);
+        break;
+    case 5:
+        tft.print("TUNER ");
+        tft.print(indexnum);
+        break;
+    case 6:
+        tft.print("CD ");
+        tft.print(indexnum);
+        break;
+    case 7:
+        tft.print("TAPE MON ");
+        tft.print(indexnum);
+        break;
+    case 8:
+        tft.print("STOP ");
+        tft.print(indexnum);
+        break;
+    case 9:
+        tft.print("REW PREV ");
+        tft.print(indexnum);
+        break;
+    case 10:
+        tft.print("FFWD NEXT ");
+        tft.print(indexnum);
+        break;
+    case 11:
+        tft.print("REV ");
+        tft.print(indexnum);
+        break;
+    case 12:
+        tft.print("PLAY ");
+        tft.print(indexnum);
+        break;
+    case 13:
+        tft.print("CH- ");
+        tft.print(indexnum);
+        break;
+    case 14:
+        tft.print("CH+ ");
+        tft.print(indexnum);
+        break;
+    case 15:
+        tft.print("ANT/TV/VCR ");
+        tft.print(indexnum);
+        break;
+    case 16:
+        tft.print("DISC DECK ");
+        tft.print(indexnum);
+        break;
+    case 17:
+        tft.print("1 ");
+        tft.print(indexnum);
+        break;
+    case 18:
+        tft.print("2 ");
+        tft.print(indexnum);
+        break;
+    case 19:
+        tft.print("3 ");
+        tft.print(indexnum);
+        break;
+    case 20:
+        tft.print("4 ");
+        tft.print(indexnum);
+        break;
+    case 21:
+        tft.print("5 ");
+        tft.print(indexnum);
+        break;
+    case 22:
+        tft.print("6 ");
+        tft.print(indexnum);
+        break;
+    case 23:
+        tft.print("7 ");
+        tft.print(indexnum);
+        break;
+    case 24:
+        tft.print("8 ");
+        tft.print(indexnum);
+        break;
+    case 25:
+        tft.print("9 ");
+        tft.print(indexnum);
+        break;
+    case 26:
+        tft.print("0 ");
+        tft.print(indexnum);
+        break;
+    case 27:
+        tft.print(">10 ");
+        tft.print(indexnum);
+        break;
+    case 28:
+        tft.print("Direct ");
+        tft.print(indexnum);
+        break;
+    case 29:
+        tft.print("Mute ");
+        tft.print(indexnum);
+        break;
+    case 30:
+        tft.print("Vol+ ");
+        tft.print(indexnum);
+        break;
+    case 31:
+        tft.print("Vol- ");
+        tft.print(indexnum);
+        break;
+  }
+}
+
+void sendCode () {
+  switch (indexnum){
+    case 1:
+        irsend.sendRaw(repeat_Power, 99, 37);
+        break;
+    case 2:
+        irsend.sendRaw(repeat_TV, 99, 37);
+        break;
+    case 3:
+        irsend.sendRaw(repeat_VCR, 99, 37);
+        break;
+    case 4:
+        irsend.sendRaw(repeat_VDP, 99, 37);
+        break;
+    case 5:
+        irsend.sendRaw(repeat_Tuner, 99, 37);
+        break;
+    case 6:
+        irsend.sendRaw(repeat_CD, 99, 37);
+        break;
+    case 7:
+        irsend.sendRaw(repeat_Tape_Mon, 99, 37);
+        break;
+    case 8:
+        irsend.sendRaw(repeat_Stop, 99, 37);
+        break;
+    case 9:
+        irsend.sendRaw(repeat_Rew_Prev, 99, 37);
+        break;
+    case 10:
+        irsend.sendRaw(repeat_Ffwd_Next, 99, 37);
+        break;
+    case 11:
+        irsend.sendRaw(repeat_Rev, 99, 37);
+        break;
+    case 12:
+        irsend.sendRaw(repeat_Play, 99, 37);
+        break;
+    case 13:
+        irsend.sendRaw(repeat_Ch_, 99, 37);
+        break;
+    case 14:
+        irsend.sendRaw(repeat_Ch__1, 99, 37);
+        break;
+    case 15:
+        irsend.sendRaw(repeat_Ant_TV_VCR, 99, 37);
+        break;
+    case 16:
+        irsend.sendRaw(repeat_Disc_Deck, 99, 37);
+        break;
+    case 17:
+        irsend.sendRaw(repeat__1, 99, 37);
+        break;
+    case 18:
+        irsend.sendRaw(repeat__2, 99, 37);
+        break;
+    case 19:
+        irsend.sendRaw(repeat__3, 99, 37);
+        break;
+    case 20:
+        irsend.sendRaw(repeat__4, 99, 37);
+        break;
+    case 21:
+        irsend.sendRaw(repeat__5, 99, 37);
+        break;
+    case 22:
+        irsend.sendRaw(repeat__6, 99, 37);
+        break;
+    case 23:
+        irsend.sendRaw(repeat__7, 99, 37);
+        break;
+    case 24:
+        irsend.sendRaw(repeat__8, 99, 37);
+        break;
+    case 25:
+        irsend.sendRaw(repeat__9, 99, 37);
+        break;
+    case 26:
+        irsend.sendRaw(repeat__0, 99, 37);
+        break;
+    case 27:
+        irsend.sendRaw(repeat__10, 99, 37);
+        break;
+    case 28:
+        irsend.sendRaw(repeat_Direct, 99, 37);
+        break;
+    case 29:
+        irsend.sendRaw(repeat_Mute, 99, 37);
+        break;
+    case 30:
+        irsend.sendRaw(repeat_Vol_, 99, 37);
+        break;
+    case 31:
+        irsend.sendRaw(repeat_Vol__1, 99, 37);
+        break;
+  }  
+}
 
 
 void setup(void) {
@@ -321,149 +556,33 @@ void setup(void) {
 	tft.setCursor(0, 0);
 	tft.setTextColor(TFT_MAGENTA);
 	tft.setTextSize(2);
-
+  drawScreen();
 }
 
 
 
 void loop(void) {
    // tft.fillScreen(TFT_YELLOW);
-  int indexnum = 0;
+  if (digitalRead(20)==LOW) {
+    every(500){
+      indexnum++;
+      if (indexnum > 31) {indexnum=1;}
+      drawScreen();
+    }
+  }
 
-        while (digitalRead(9) == HIGH){
-        tft.setCursor(20, 120);
-        tft.fillScreen(TFT_BLACK);
-        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
-        tft.print("POWER ");
-        tft.print(indexnum);
-        irsend.sendRaw(repeat_Power, 99, 37);  // Send a raw data capture at 38kHz.
-        delay(100);
-        tft.fillScreen(TFT_BLACK);
-        tft.setTextColor(TFT_WHITE, TFT_BLACK, true);
-        while (digitalRead(10)==HIGH){}
-        }
-        indexnum++;
-        delay(100);
-        while (digitalRead(9) == HIGH){
-        tft.setCursor(20, 120);
-        tft.fillScreen(TFT_BLACK);
-        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
-        tft.print("VOL UP ");
-        tft.print(indexnum);
-        irsend.sendRaw(repeat_Vol__1, 99, 37);  // Send a raw data capture at 38kHz.
-        delay(100);
-        tft.fillScreen(TFT_BLACK);
-        tft.setTextColor(TFT_WHITE, TFT_BLACK, true);
-        while (digitalRead(10)==HIGH){}
-        }
-        indexnum++;
-        delay(100);
-        while (digitalRead(9) == HIGH){
-        tft.setCursor(20, 120);
-        tft.fillScreen(TFT_BLACK);
-        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
-        tft.print("VOL DOWN ");
-        tft.print(indexnum);
-        irsend.sendRaw(repeat_Vol_, 99, 37);  // Send a raw data capture at 38kHz.
-        delay(100);
-        tft.fillScreen(TFT_BLACK);
-        tft.setTextColor(TFT_WHITE, TFT_BLACK, true);
-        while (digitalRead(10)==HIGH){}
-        }
-        indexnum++;
-        delay(100);
-        while (digitalRead(9) == HIGH){
-        tft.setCursor(20, 120);
-        tft.fillScreen(TFT_BLACK);
-        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
-        tft.print("TV ");
-        tft.print(indexnum);
-        irsend.sendRaw(repeat_TV, 99, 37);  // Send a raw data capture at 38kHz.
-        delay(100);
-        tft.fillScreen(TFT_BLACK);
-        tft.setTextColor(TFT_WHITE, TFT_BLACK, true);
-        while (digitalRead(10)==HIGH){}
-        }
-        indexnum++;
-        delay(100);
-        while (digitalRead(9) == HIGH){
-        tft.setCursor(20, 120);
-        tft.fillScreen(TFT_BLACK);
-        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
-        tft.print("VCR ");
-        tft.print(indexnum);
-        irsend.sendRaw(repeat_VCR, 99, 37);  // Send a raw data capture at 38kHz.
-        delay(100);
-        tft.fillScreen(TFT_BLACK);
-        tft.setTextColor(TFT_WHITE, TFT_BLACK, true);
-        while (digitalRead(10)==HIGH){}
-        }
-        indexnum++;
-        delay(100);
-        while (digitalRead(9) == HIGH){
-        tft.setCursor(20, 120);
-        tft.fillScreen(TFT_BLACK);
-        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
-        tft.print("TUNER ");
-        tft.print(indexnum);
-        irsend.sendRaw(repeat_Tuner, 99, 37);  // Send a raw data capture at 38kHz.
-        delay(100);
-        tft.fillScreen(TFT_BLACK);
-        tft.setTextColor(TFT_WHITE, TFT_BLACK, true);
-        while (digitalRead(10)==HIGH){}
-        }
-        indexnum++;
-        delay(100);
-        while (digitalRead(9) == HIGH){
-        tft.setCursor(20, 120);
-        tft.fillScreen(TFT_BLACK);
-        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
-        tft.print("CD ");
-        tft.print(indexnum);
-        irsend.sendRaw(repeat_CD, 99, 37);  // Send a raw data capture at 38kHz.
-        delay(100);
-        tft.fillScreen(TFT_BLACK);
-        tft.setTextColor(TFT_WHITE, TFT_BLACK, true);
-        while (digitalRead(10)==HIGH){}
-        }
-        indexnum++;
-        delay(100);
-        while (digitalRead(9) == HIGH){
-        tft.setCursor(20, 120);
-        tft.fillScreen(TFT_BLACK);
-        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
-        tft.print("TAPE MON ");
-        tft.print(indexnum);
-        irsend.sendRaw(repeat_Tape_Mon, 99, 37);  // Send a raw data capture at 38kHz.
-        delay(100);
-        tft.fillScreen(TFT_BLACK);
-        tft.setTextColor(TFT_WHITE, TFT_BLACK, true);
-        while (digitalRead(10)==HIGH){}
-        }
-        indexnum++;
-        delay(100);
-        while (digitalRead(9) == HIGH){
-        tft.setCursor(20, 120);
-        tft.fillScreen(TFT_BLACK);
-        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
-        tft.print("MUTE ");
-        tft.print(indexnum);
-        irsend.sendRaw(repeat_Mute, 99, 37);  // Send a raw data capture at 38kHz.
-        delay(100);
-        tft.fillScreen(TFT_BLACK);
-        tft.setTextColor(TFT_WHITE, TFT_BLACK, true);
-        while (digitalRead(10)==HIGH){}
-        }
-        indexnum++;
-        delay(100);
+  if (digitalRead(9)==LOW) {
+    every(501){
+      indexnum--;
+      if (indexnum < 1) {indexnum=31;}
+      drawScreen();
+    }
+  }
 
-
-
-        delay(1000);
-        tft.fillScreen(TFT_BLACK);
-        tft.setCursor(20, 120);
-        tft.setTextColor(TFT_BLACK, TFT_GREEN, true);
-        tft.print("TEST COMPLETE");
-        while(1);
-
+  if (digitalRead(10)==LOW) {
+    tft.drawCircle(200,20,5,TFT_YELLOW);
+    sendCode();
+  }
+  else {tft.drawCircle(200,20,5,TFT_BLACK);}
+  delay(10);
 }
