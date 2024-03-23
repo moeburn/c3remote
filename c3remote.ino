@@ -145,13 +145,136 @@ uint16_t repeat__Copy_to_Clipboard__18[100] = { 3456U, 1728U, 432U, 432U, 432U, 
 // Protocol: Panasonic, Parameters: S=0U D=160U F=178U
 uint16_t repeat__Copy_to_Clipboard__19[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 65535U };
 
+uint16_t repeat_Power[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 65535U };
+
+// Command #2: TV
+// Protocol: Panasonic, Parameters: S=0U D=160U F=159U
+uint16_t repeat_TV[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 65535U };
+
+// Command #3: VCR
+// Protocol: Panasonic, Parameters: S=0U D=160U F=158U
+uint16_t repeat_VCR[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 65535U };
+
+// Command #4: VDP
+// Protocol: Panasonic, Parameters: S=0U D=160U F=162U
+uint16_t repeat_VDP[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 65535U };
+
+// Command #5: Tuner
+// Protocol: Panasonic, Parameters: S=0U D=160U F=146U
+uint16_t repeat_Tuner[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 65535U };
+
+// Command #6: CD
+// Protocol: Panasonic, Parameters: S=0U D=160U F=148U
+uint16_t repeat_CD[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 65535U };
+
+// Command #7: Tape Mon
+// Protocol: Panasonic, Parameters: S=0U D=160U F=170U
+uint16_t repeat_Tape_Mon[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 65535U };
+
+// Command #8: Stop
+// Protocol: Panasonic, Parameters: S=8U D=160U F=0U
+uint16_t repeat_Stop[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 65535U };
+
+// Command #9: Rew/Prev
+// Protocol: Panasonic, Parameters: S=8U D=160U F=2U
+uint16_t repeat_Rew_Prev[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 65535U };
+
+// Command #10: Ffwd/Next
+// Protocol: Panasonic, Parameters: S=8U D=160U F=3U
+uint16_t repeat_Ffwd_Next[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 65535U };
+
+// Command #11: Rev
+// Protocol: Panasonic, Parameters: S=8U D=160U F=11U
+uint16_t repeat_Rev[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 65535U };
+
+// Command #12: Play
+// Protocol: Panasonic, Parameters: S=8U D=160U F=10U
+uint16_t repeat_Play[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 65535U };
+
+// Command #13: Ch-
+// Protocol: Panasonic, Parameters: S=0U D=128U F=53U
+uint16_t repeat_Ch_[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 65535U };
+
+// Command #14: Ch+
+// Protocol: Panasonic, Parameters: S=0U D=128U F=52U
+uint16_t repeat_Ch__1[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 65535U };
+
+// Command #15: Ant TV/VCR
+// Protocol: Panasonic, Parameters: S=0U D=144U F=54U
+uint16_t repeat_Ant_TV_VCR[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 65535U };
+
+// Command #16: Disc/Deck
+// Protocol: Panasonic, Parameters: S=8U D=160U F=149U
+uint16_t repeat_Disc_Deck[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 65535U };
+
+// Command #17: 1
+// Protocol: Panasonic, Parameters: S=10U D=160U F=16U
+uint16_t repeat__1[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 65535U };
+
+// Command #18: 2
+// Protocol: Panasonic, Parameters: S=10U D=160U F=17U
+uint16_t repeat__2[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 65535U };
+
+// Command #19: 3
+// Protocol: Panasonic, Parameters: S=10U D=160U F=18U
+uint16_t repeat__3[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 65535U };
+
+// Command #20: 4
+// Protocol: Panasonic, Parameters: S=10U D=160U F=19U
+uint16_t repeat__4[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 65535U };
+
+// Command #21: 5
+// Protocol: Panasonic, Parameters: S=10U D=160U F=20U
+uint16_t repeat__5[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 65535U };
+
+// Command #22: 6
+// Protocol: Panasonic, Parameters: S=10U D=160U F=21U
+uint16_t repeat__6[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 65535U };
+
+// Command #23: 7
+// Protocol: Panasonic, Parameters: S=10U D=160U F=22U
+uint16_t repeat__7[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 65535U };
+
+// Command #24: 8
+// Protocol: Panasonic, Parameters: S=10U D=160U F=23U
+uint16_t repeat__8[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 65535U };
+
+// Command #25: 9
+// Protocol: Panasonic, Parameters: S=10U D=160U F=24U
+uint16_t repeat__9[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 65535U };
+
+// Command #26: 0
+// Protocol: Panasonic, Parameters: S=10U D=160U F=25U
+uint16_t repeat__0[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 65535U };
+
+// Command #27: >10
+// Protocol: Panasonic, Parameters: S=10U D=160U F=132U
+uint16_t repeat__10[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 65535U };
+
+// Command #28: Direct
+// Protocol: Panasonic, Parameters: S=10U D=160U F=238U
+uint16_t repeat_Direct[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 65535U };
+
+// Command #29: Mute
+// Protocol: Panasonic, Parameters: S=0U D=160U F=50U
+uint16_t repeat_Mute[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 65535U };
+
+// Command #30: Vol+
+// Protocol: Panasonic, Parameters: S=0U D=160U F=32U
+uint16_t repeat_Vol_[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 65535U };
+
+// Command #31: Vol-
+// Protocol: Panasonic, Parameters: S=0U D=160U F=33U
+uint16_t repeat_Vol__1[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 65535U };
+
+
 
 
 void setup(void) {
-  irsend.begin();
-  pinMode(9,INPUT_PULLUP);
+    pinMode(9,INPUT_PULLUP);
   pinMode(10,INPUT_PULLUP);
   pinMode(20,INPUT_PULLUP);
+  irsend.begin();
   Serial.begin(115200);
     tft.init();
   tft.setRotation(0);
@@ -204,193 +327,143 @@ void setup(void) {
 
 
 void loop(void) {
-  
+   // tft.fillScreen(TFT_YELLOW);
   int indexnum = 0;
-  while(digitalRead(9) == HIGH){
-    tft.setCursor(20, 120);
-    if (digitalRead(10) == LOW){
-      tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
-      tft.print("Power ");
-      tft.print(indexnum);
-      irsend.sendRaw(repeat__Copy_to_Clipboard_, 99, 37);  // Send a raw data capture at 38kHz.
-      delay(500);
-    }
-    else {
-      tft.setCursor(20, 120);
-      tft.setTextColor(TFT_WHITE, TFT_BLACK, true);
-      tft.print("Power ");
-      tft.print(indexnum);
-    }
-  }
-  delay(1000);
-  indexnum++;
-  while(digitalRead(9) == HIGH){
-    tft.setCursor(20, 120);
-    if (digitalRead(10) == LOW){
-      tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
-      tft.print("VCR1 ");
-      tft.print(indexnum);
-      irsend.sendRaw(repeat__Copy_to_Clipboard__1, 99, 37);  // Send a raw data capture at 38kHz.
-      delay(500);
-    }
-    else {
-      tft.setCursor(20, 120);
-      tft.setTextColor(TFT_WHITE, TFT_BLACK, true);
-      tft.print("VCR1 ");
-      tft.print(indexnum);
-    }
-  }
-  delay(1000);
-  indexnum++;
-  tft.fillScreen(TFT_BLACK);
 
-  tft.setCursor(20, 120);
-  tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
-  tft.print("LD ");
-  tft.print(indexnum);
-  indexnum++;
-  irsend.sendRaw(repeat__Copy_to_Clipboard__2, 99, 37);  // Send a raw data capture at 38kHz.
-  delay(1000);
-  tft.fillScreen(TFT_BLACK);
-  tft.setCursor(20, 120);
-  tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
-  tft.print("CD ");
-  tft.print(indexnum);
-  indexnum++;
-  irsend.sendRaw(repeat__Copy_to_Clipboard__3, 99, 37);  // Send a raw data capture at 38kHz.
-  delay(1000);
-  tft.fillScreen(TFT_BLACK);
-  tft.setCursor(20, 120);
-  tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
-  tft.print("Tuner ");
-  tft.print(indexnum);
-  indexnum++;
-  irsend.sendRaw(repeat__Copy_to_Clipboard__4, 99, 37);  // Send a raw data capture at 38kHz.
-  delay(1000);
-  tft.fillScreen(TFT_BLACK);
-  tft.setCursor(20, 120);
-  tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
-  tft.print("Return ");
-  tft.print(indexnum);
-  indexnum++;
-  irsend.sendRaw(repeat__Copy_to_Clipboard__5, 99, 37);  // Send a raw data capture at 38kHz.
-  delay(1000);
-  tft.fillScreen(TFT_BLACK);
-  tft.setCursor(20, 120);
-  tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
-  tft.print("Menu ");
-  tft.print(indexnum);
-  indexnum++;
-  irsend.sendRaw(repeat__Copy_to_Clipboard__6, 99, 37);  // Send a raw data capture at 38kHz.
-  delay(1000);
-  tft.fillScreen(TFT_BLACK);
-  tft.setCursor(20, 120);
-  tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
-  tft.print("Up ");
-  tft.print(indexnum);
-  indexnum++;
-  irsend.sendRaw(repeat__Copy_to_Clipboard__7, 99, 37);  // Send a raw data capture at 38kHz.
-  delay(1000);
-  tft.fillScreen(TFT_BLACK);
-  tft.setCursor(20, 120);
-  tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
-  tft.print("Down ");
-  tft.print(indexnum);
-  indexnum++;
-  irsend.sendRaw(repeat__Copy_to_Clipboard__8, 99, 37);  // Send a raw data capture at 38kHz.
-  delay(1000);
-  tft.fillScreen(TFT_BLACK);
-  tft.setCursor(20, 120);
-  tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
-  tft.print("Left ");
-  tft.print(indexnum);
-  indexnum++;
-  irsend.sendRaw(repeat__Copy_to_Clipboard__9, 99, 37);  // Send a raw data capture at 38kHz.
-  delay(1000);
-  tft.fillScreen(TFT_BLACK);
-  tft.setCursor(20, 120);
-  tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
-  tft.print("Right ");
-  tft.print(indexnum);
-  indexnum++;
-  irsend.sendRaw(repeat__Copy_to_Clipboard__10, 99, 37);  // Send a raw data capture at 38kHz.
-  delay(1000);
-  tft.fillScreen(TFT_BLACK);
-  tft.setCursor(20, 120);
-  tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
-  tft.print("Vol+ ");
-  tft.print(indexnum);
-  indexnum++;
-  irsend.sendRaw(repeat__Copy_to_Clipboard__11, 99, 37);  // Send a raw data capture at 38kHz.
-  delay(1000);
-  tft.fillScreen(TFT_BLACK);
-  tft.setCursor(20, 120);
-  tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
-  tft.print("Vol- ");
-  tft.print(indexnum);
-  indexnum++;
-  irsend.sendRaw(repeat__Copy_to_Clipboard__12, 99, 37);  // Send a raw data capture at 38kHz.
-  delay(1000);
-  tft.fillScreen(TFT_BLACK);
-  tft.setCursor(20, 120);
-  tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
-  tft.print("Mute ");
-  tft.print(indexnum);
-  indexnum++;
-  irsend.sendRaw(repeat__Copy_to_Clipboard__13, 99, 37);  // Send a raw data capture at 38kHz.
-  delay(1000);
-  tft.fillScreen(TFT_BLACK);
-  tft.setCursor(20, 120);
-  tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
-  tft.print("Title ");
-  tft.print(indexnum);
-  indexnum++;
-  irsend.sendRaw(repeat__Copy_to_Clipboard__14, 99, 37);  // Send a raw data capture at 38kHz.
-  delay(1000);
-  tft.fillScreen(TFT_BLACK);
-  tft.setCursor(20, 120);
-  tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
-  tft.print("Select ");
-  tft.print(indexnum);
-  indexnum++;
-  irsend.sendRaw(repeat__Copy_to_Clipboard__15, 99, 37);  // Send a raw data capture at 38kHz.
-  delay(1000);
-  tft.fillScreen(TFT_BLACK);
-  tft.setCursor(20, 120);
-  tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
-  tft.print("Select2 ");
-  tft.print(indexnum);
-  indexnum++;
-  irsend.sendRaw(repeat__Copy_to_Clipboard__16, 99, 37);  // Send a raw data capture at 38kHz.
-  delay(1000);
-  tft.fillScreen(TFT_BLACK);
-  tft.setCursor(20, 120);
-  tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
-  tft.print("Help ");
-  tft.print(indexnum);
-  indexnum++;
-  irsend.sendRaw(repeat__Copy_to_Clipboard__17, 99, 37);  // Send a raw data capture at 38kHz.
-  delay(1000);
-  tft.fillScreen(TFT_BLACK);
-  tft.setCursor(20, 120);
-  tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
-  tft.print("Off/On ");
-  tft.print(indexnum);
-  indexnum++;
-  irsend.sendRaw(repeat__Copy_to_Clipboard__18, 99, 37);  // Send a raw data capture at 38kHz.
-  delay(1000);
-  tft.fillScreen(TFT_BLACK);
-  tft.setCursor(20, 120);
-  tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
-  tft.print("P Logic ");
-  tft.print(indexnum);
-  indexnum++;
-  irsend.sendRaw(repeat__Copy_to_Clipboard__19, 99, 37);  // Send a raw data capture at 38kHz.
-  delay(1000);
-  tft.fillScreen(TFT_BLACK);
-  tft.setCursor(20, 120);
-  tft.setTextColor(TFT_BLACK, TFT_GREEN, true);
-  tft.print("TEST COMPLETE");
-       
+        while (digitalRead(9) == HIGH){
+        tft.setCursor(20, 120);
+        tft.fillScreen(TFT_BLACK);
+        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
+        tft.print("POWER ");
+        tft.print(indexnum);
+        irsend.sendRaw(repeat_Power, 99, 37);  // Send a raw data capture at 38kHz.
+        delay(100);
+        tft.fillScreen(TFT_BLACK);
+        tft.setTextColor(TFT_WHITE, TFT_BLACK, true);
+        while (digitalRead(10)==HIGH){}
+        }
+        indexnum++;
+        delay(100);
+        while (digitalRead(9) == HIGH){
+        tft.setCursor(20, 120);
+        tft.fillScreen(TFT_BLACK);
+        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
+        tft.print("VOL UP ");
+        tft.print(indexnum);
+        irsend.sendRaw(repeat_Vol__1, 99, 37);  // Send a raw data capture at 38kHz.
+        delay(100);
+        tft.fillScreen(TFT_BLACK);
+        tft.setTextColor(TFT_WHITE, TFT_BLACK, true);
+        while (digitalRead(10)==HIGH){}
+        }
+        indexnum++;
+        delay(100);
+        while (digitalRead(9) == HIGH){
+        tft.setCursor(20, 120);
+        tft.fillScreen(TFT_BLACK);
+        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
+        tft.print("VOL DOWN ");
+        tft.print(indexnum);
+        irsend.sendRaw(repeat_Vol_, 99, 37);  // Send a raw data capture at 38kHz.
+        delay(100);
+        tft.fillScreen(TFT_BLACK);
+        tft.setTextColor(TFT_WHITE, TFT_BLACK, true);
+        while (digitalRead(10)==HIGH){}
+        }
+        indexnum++;
+        delay(100);
+        while (digitalRead(9) == HIGH){
+        tft.setCursor(20, 120);
+        tft.fillScreen(TFT_BLACK);
+        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
+        tft.print("TV ");
+        tft.print(indexnum);
+        irsend.sendRaw(repeat_TV, 99, 37);  // Send a raw data capture at 38kHz.
+        delay(100);
+        tft.fillScreen(TFT_BLACK);
+        tft.setTextColor(TFT_WHITE, TFT_BLACK, true);
+        while (digitalRead(10)==HIGH){}
+        }
+        indexnum++;
+        delay(100);
+        while (digitalRead(9) == HIGH){
+        tft.setCursor(20, 120);
+        tft.fillScreen(TFT_BLACK);
+        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
+        tft.print("VCR ");
+        tft.print(indexnum);
+        irsend.sendRaw(repeat_VCR, 99, 37);  // Send a raw data capture at 38kHz.
+        delay(100);
+        tft.fillScreen(TFT_BLACK);
+        tft.setTextColor(TFT_WHITE, TFT_BLACK, true);
+        while (digitalRead(10)==HIGH){}
+        }
+        indexnum++;
+        delay(100);
+        while (digitalRead(9) == HIGH){
+        tft.setCursor(20, 120);
+        tft.fillScreen(TFT_BLACK);
+        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
+        tft.print("TUNER ");
+        tft.print(indexnum);
+        irsend.sendRaw(repeat_Tuner, 99, 37);  // Send a raw data capture at 38kHz.
+        delay(100);
+        tft.fillScreen(TFT_BLACK);
+        tft.setTextColor(TFT_WHITE, TFT_BLACK, true);
+        while (digitalRead(10)==HIGH){}
+        }
+        indexnum++;
+        delay(100);
+        while (digitalRead(9) == HIGH){
+        tft.setCursor(20, 120);
+        tft.fillScreen(TFT_BLACK);
+        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
+        tft.print("CD ");
+        tft.print(indexnum);
+        irsend.sendRaw(repeat_CD, 99, 37);  // Send a raw data capture at 38kHz.
+        delay(100);
+        tft.fillScreen(TFT_BLACK);
+        tft.setTextColor(TFT_WHITE, TFT_BLACK, true);
+        while (digitalRead(10)==HIGH){}
+        }
+        indexnum++;
+        delay(100);
+        while (digitalRead(9) == HIGH){
+        tft.setCursor(20, 120);
+        tft.fillScreen(TFT_BLACK);
+        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
+        tft.print("TAPE MON ");
+        tft.print(indexnum);
+        irsend.sendRaw(repeat_Tape_Mon, 99, 37);  // Send a raw data capture at 38kHz.
+        delay(100);
+        tft.fillScreen(TFT_BLACK);
+        tft.setTextColor(TFT_WHITE, TFT_BLACK, true);
+        while (digitalRead(10)==HIGH){}
+        }
+        indexnum++;
+        delay(100);
+        while (digitalRead(9) == HIGH){
+        tft.setCursor(20, 120);
+        tft.fillScreen(TFT_BLACK);
+        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
+        tft.print("MUTE ");
+        tft.print(indexnum);
+        irsend.sendRaw(repeat_Mute, 99, 37);  // Send a raw data capture at 38kHz.
+        delay(100);
+        tft.fillScreen(TFT_BLACK);
+        tft.setTextColor(TFT_WHITE, TFT_BLACK, true);
+        while (digitalRead(10)==HIGH){}
+        }
+        indexnum++;
+        delay(100);
+
+
+
+        delay(1000);
+        tft.fillScreen(TFT_BLACK);
+        tft.setCursor(20, 120);
+        tft.setTextColor(TFT_BLACK, TFT_GREEN, true);
+        tft.print("TEST COMPLETE");
+        while(1);
 
 }
