@@ -149,6 +149,9 @@ uint16_t repeat__Copy_to_Clipboard__19[100] = { 3456U, 1728U, 432U, 432U, 432U, 
 
 void setup(void) {
   irsend.begin();
+  pinMode(9,INPUT_PULLUP);
+  pinMode(10,INPUT_PULLUP);
+  pinMode(20,INPUT_PULLUP);
   Serial.begin(115200);
     tft.init();
   tft.setRotation(0);
@@ -201,188 +204,193 @@ void setup(void) {
 
 
 void loop(void) {
-   // tft.fillScreen(TFT_YELLOW);
-	tft.setCursor(20, 120);
-	tft.setTextColor(TFT_BLACK, TFT_YELLOW, true);
-	tft.setTextSize(2);
-  tft.print("SAMSUNG POWER");
-  Serial.println("Sending a Samsung TV 'on' command.");
-  irsend.sendPronto(samsungProntoCode, 72);
-  delay(2000);
-  tft.setCursor(20, 120);
-  tft.fillScreen(TFT_BLACK);
-  tft.setTextColor(TFT_BLACK, TFT_MAGENTA, true);
-  tft.print("PANASONIC POWER");
-  Serial.println("Sending a Panasonic Plasma TV 'on' command.");
-  irsend.sendPronto(panasonicProntoCode, 104);
-  delay(2000);
-
-
+  
   int indexnum = 0;
-        tft.setCursor(20, 120);
-        tft.fillScreen(TFT_BLACK);
-        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
-        tft.print("TECHNICS ");
-        tft.print(indexnum);
-        indexnum++;
-        irsend.sendRaw(repeat__Copy_to_Clipboard_, 99, 37);  // Send a raw data capture at 38kHz.
-        delay(1000);
-            tft.fillScreen(TFT_BLACK);
-            tft.setCursor(20, 120);
-        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
-        tft.print("TECHNICS ");
-        tft.print(indexnum);
-        indexnum++;
-        irsend.sendRaw(repeat__Copy_to_Clipboard__1, 99, 37);  // Send a raw data capture at 38kHz.
-        delay(1000);
-            tft.fillScreen(TFT_BLACK);
-            tft.setCursor(20, 120);
-        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
-        tft.print("TECHNICS ");
-        tft.print(indexnum);
-        indexnum++;
-        irsend.sendRaw(repeat__Copy_to_Clipboard__2, 99, 37);  // Send a raw data capture at 38kHz.
-        delay(1000);
-            tft.fillScreen(TFT_BLACK);
-            tft.setCursor(20, 120);
-        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
-        tft.print("TECHNICS ");
-        tft.print(indexnum);
-        indexnum++;
-        irsend.sendRaw(repeat__Copy_to_Clipboard__3, 99, 37);  // Send a raw data capture at 38kHz.
-        delay(1000);
-            tft.fillScreen(TFT_BLACK);
-            tft.setCursor(20, 120);
-        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
-        tft.print("TECHNICS ");
-        tft.print(indexnum);
-        indexnum++;
-        irsend.sendRaw(repeat__Copy_to_Clipboard__4, 99, 37);  // Send a raw data capture at 38kHz.
-        delay(1000);
-            tft.fillScreen(TFT_BLACK);
-            tft.setCursor(20, 120);
-        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
-        tft.print("TECHNICS ");
-        tft.print(indexnum);
-        indexnum++;
-        irsend.sendRaw(repeat__Copy_to_Clipboard__5, 99, 37);  // Send a raw data capture at 38kHz.
-        delay(1000);
-            tft.fillScreen(TFT_BLACK);
-            tft.setCursor(20, 120);
-        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
-        tft.print("TECHNICS ");
-        tft.print(indexnum);
-        indexnum++;
-        irsend.sendRaw(repeat__Copy_to_Clipboard__6, 99, 37);  // Send a raw data capture at 38kHz.
-        delay(1000);
-            tft.fillScreen(TFT_BLACK);
-            tft.setCursor(20, 120);
-        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
-        tft.print("TECHNICS ");
-        tft.print(indexnum);
-        indexnum++;
-        irsend.sendRaw(repeat__Copy_to_Clipboard__7, 99, 37);  // Send a raw data capture at 38kHz.
-        delay(1000);
-            tft.fillScreen(TFT_BLACK);
-            tft.setCursor(20, 120);
-        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
-        tft.print("TECHNICS ");
-        tft.print(indexnum);
-        indexnum++;
-        irsend.sendRaw(repeat__Copy_to_Clipboard__8, 99, 37);  // Send a raw data capture at 38kHz.
-        delay(1000);
-            tft.fillScreen(TFT_BLACK);
-            tft.setCursor(20, 120);
-        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
-        tft.print("TECHNICS ");
-        tft.print(indexnum);
-        indexnum++;
-        irsend.sendRaw(repeat__Copy_to_Clipboard__9, 99, 37);  // Send a raw data capture at 38kHz.
-        delay(1000);
-            tft.fillScreen(TFT_BLACK);
-            tft.setCursor(20, 120);
-        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
-        tft.print("TECHNICS ");
-        tft.print(indexnum);
-        indexnum++;
-        irsend.sendRaw(repeat__Copy_to_Clipboard__10, 99, 37);  // Send a raw data capture at 38kHz.
-        delay(1000);
-            tft.fillScreen(TFT_BLACK);
-            tft.setCursor(20, 120);
-        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
-        tft.print("TECHNICS ");
-        tft.print(indexnum);
-        indexnum++;
-        irsend.sendRaw(repeat__Copy_to_Clipboard__11, 99, 37);  // Send a raw data capture at 38kHz.
-        delay(1000);
-            tft.fillScreen(TFT_BLACK);
-            tft.setCursor(20, 120);
-        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
-        tft.print("TECHNICS ");
-        tft.print(indexnum);
-        indexnum++;
-        irsend.sendRaw(repeat__Copy_to_Clipboard__12, 99, 37);  // Send a raw data capture at 38kHz.
-        delay(1000);
-            tft.fillScreen(TFT_BLACK);
-            tft.setCursor(20, 120);
-        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
-        tft.print("TECHNICS ");
-        tft.print(indexnum);
-        indexnum++;
-        irsend.sendRaw(repeat__Copy_to_Clipboard__13, 99, 37);  // Send a raw data capture at 38kHz.
-        delay(1000);
-            tft.fillScreen(TFT_BLACK);
-            tft.setCursor(20, 120);
-        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
-        tft.print("TECHNICS ");
-        tft.print(indexnum);
-        indexnum++;
-        irsend.sendRaw(repeat__Copy_to_Clipboard__14, 99, 37);  // Send a raw data capture at 38kHz.
-        delay(1000);
-            tft.fillScreen(TFT_BLACK);
-            tft.setCursor(20, 120);
-        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
-        tft.print("TECHNICS ");
-        tft.print(indexnum);
-        indexnum++;
-        irsend.sendRaw(repeat__Copy_to_Clipboard__15, 99, 37);  // Send a raw data capture at 38kHz.
-        delay(1000);
-        tft.fillScreen(TFT_BLACK);
-        tft.setCursor(20, 120);
-        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
-        tft.print("TECHNICS ");
-        tft.print(indexnum);
-        indexnum++;
-        irsend.sendRaw(repeat__Copy_to_Clipboard__16, 99, 37);  // Send a raw data capture at 38kHz.
-        delay(1000);
-        tft.fillScreen(TFT_BLACK);
-        tft.setCursor(20, 120);
-        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
-        tft.print("TECHNICS ");
-        tft.print(indexnum);
-        indexnum++;
-        irsend.sendRaw(repeat__Copy_to_Clipboard__17, 99, 37);  // Send a raw data capture at 38kHz.
-        delay(1000);
-        tft.fillScreen(TFT_BLACK);
-        tft.setCursor(20, 120);
-        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
-        tft.print("TECHNICS ");
-        tft.print(indexnum);
-        indexnum++;
-        irsend.sendRaw(repeat__Copy_to_Clipboard__18, 99, 37);  // Send a raw data capture at 38kHz.
-        delay(1000);
-        tft.fillScreen(TFT_BLACK);
-        tft.setCursor(20, 120);
-        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
-        tft.print("TECHNICS ");
-        tft.print(indexnum);
-        indexnum++;
-        irsend.sendRaw(repeat__Copy_to_Clipboard__19, 99, 37);  // Send a raw data capture at 38kHz.
-        delay(1000);
-        tft.fillScreen(TFT_BLACK);
-        tft.setCursor(20, 120);
-        tft.setTextColor(TFT_BLACK, TFT_GREEN, true);
-        tft.print("TEST COMPLETE");
-        while(1);
+  while(digitalRead(9) == HIGH){
+    tft.setCursor(20, 120);
+    if (digitalRead(10) == LOW){
+      tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
+      tft.print("Power ");
+      tft.print(indexnum);
+      irsend.sendRaw(repeat__Copy_to_Clipboard_, 99, 37);  // Send a raw data capture at 38kHz.
+      delay(500);
+    }
+    else {
+      tft.setCursor(20, 120);
+      tft.setTextColor(TFT_WHITE, TFT_BLACK, true);
+      tft.print("Power ");
+      tft.print(indexnum);
+    }
+  }
+  delay(1000);
+  indexnum++;
+  while(digitalRead(9) == HIGH){
+    tft.setCursor(20, 120);
+    if (digitalRead(10) == LOW){
+      tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
+      tft.print("VCR1 ");
+      tft.print(indexnum);
+      irsend.sendRaw(repeat__Copy_to_Clipboard__1, 99, 37);  // Send a raw data capture at 38kHz.
+      delay(500);
+    }
+    else {
+      tft.setCursor(20, 120);
+      tft.setTextColor(TFT_WHITE, TFT_BLACK, true);
+      tft.print("VCR1 ");
+      tft.print(indexnum);
+    }
+  }
+  delay(1000);
+  indexnum++;
+  tft.fillScreen(TFT_BLACK);
+
+  tft.setCursor(20, 120);
+  tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
+  tft.print("LD ");
+  tft.print(indexnum);
+  indexnum++;
+  irsend.sendRaw(repeat__Copy_to_Clipboard__2, 99, 37);  // Send a raw data capture at 38kHz.
+  delay(1000);
+  tft.fillScreen(TFT_BLACK);
+  tft.setCursor(20, 120);
+  tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
+  tft.print("CD ");
+  tft.print(indexnum);
+  indexnum++;
+  irsend.sendRaw(repeat__Copy_to_Clipboard__3, 99, 37);  // Send a raw data capture at 38kHz.
+  delay(1000);
+  tft.fillScreen(TFT_BLACK);
+  tft.setCursor(20, 120);
+  tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
+  tft.print("Tuner ");
+  tft.print(indexnum);
+  indexnum++;
+  irsend.sendRaw(repeat__Copy_to_Clipboard__4, 99, 37);  // Send a raw data capture at 38kHz.
+  delay(1000);
+  tft.fillScreen(TFT_BLACK);
+  tft.setCursor(20, 120);
+  tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
+  tft.print("Return ");
+  tft.print(indexnum);
+  indexnum++;
+  irsend.sendRaw(repeat__Copy_to_Clipboard__5, 99, 37);  // Send a raw data capture at 38kHz.
+  delay(1000);
+  tft.fillScreen(TFT_BLACK);
+  tft.setCursor(20, 120);
+  tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
+  tft.print("Menu ");
+  tft.print(indexnum);
+  indexnum++;
+  irsend.sendRaw(repeat__Copy_to_Clipboard__6, 99, 37);  // Send a raw data capture at 38kHz.
+  delay(1000);
+  tft.fillScreen(TFT_BLACK);
+  tft.setCursor(20, 120);
+  tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
+  tft.print("Up ");
+  tft.print(indexnum);
+  indexnum++;
+  irsend.sendRaw(repeat__Copy_to_Clipboard__7, 99, 37);  // Send a raw data capture at 38kHz.
+  delay(1000);
+  tft.fillScreen(TFT_BLACK);
+  tft.setCursor(20, 120);
+  tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
+  tft.print("Down ");
+  tft.print(indexnum);
+  indexnum++;
+  irsend.sendRaw(repeat__Copy_to_Clipboard__8, 99, 37);  // Send a raw data capture at 38kHz.
+  delay(1000);
+  tft.fillScreen(TFT_BLACK);
+  tft.setCursor(20, 120);
+  tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
+  tft.print("Left ");
+  tft.print(indexnum);
+  indexnum++;
+  irsend.sendRaw(repeat__Copy_to_Clipboard__9, 99, 37);  // Send a raw data capture at 38kHz.
+  delay(1000);
+  tft.fillScreen(TFT_BLACK);
+  tft.setCursor(20, 120);
+  tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
+  tft.print("Right ");
+  tft.print(indexnum);
+  indexnum++;
+  irsend.sendRaw(repeat__Copy_to_Clipboard__10, 99, 37);  // Send a raw data capture at 38kHz.
+  delay(1000);
+  tft.fillScreen(TFT_BLACK);
+  tft.setCursor(20, 120);
+  tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
+  tft.print("Vol+ ");
+  tft.print(indexnum);
+  indexnum++;
+  irsend.sendRaw(repeat__Copy_to_Clipboard__11, 99, 37);  // Send a raw data capture at 38kHz.
+  delay(1000);
+  tft.fillScreen(TFT_BLACK);
+  tft.setCursor(20, 120);
+  tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
+  tft.print("Vol- ");
+  tft.print(indexnum);
+  indexnum++;
+  irsend.sendRaw(repeat__Copy_to_Clipboard__12, 99, 37);  // Send a raw data capture at 38kHz.
+  delay(1000);
+  tft.fillScreen(TFT_BLACK);
+  tft.setCursor(20, 120);
+  tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
+  tft.print("Mute ");
+  tft.print(indexnum);
+  indexnum++;
+  irsend.sendRaw(repeat__Copy_to_Clipboard__13, 99, 37);  // Send a raw data capture at 38kHz.
+  delay(1000);
+  tft.fillScreen(TFT_BLACK);
+  tft.setCursor(20, 120);
+  tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
+  tft.print("Title ");
+  tft.print(indexnum);
+  indexnum++;
+  irsend.sendRaw(repeat__Copy_to_Clipboard__14, 99, 37);  // Send a raw data capture at 38kHz.
+  delay(1000);
+  tft.fillScreen(TFT_BLACK);
+  tft.setCursor(20, 120);
+  tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
+  tft.print("Select ");
+  tft.print(indexnum);
+  indexnum++;
+  irsend.sendRaw(repeat__Copy_to_Clipboard__15, 99, 37);  // Send a raw data capture at 38kHz.
+  delay(1000);
+  tft.fillScreen(TFT_BLACK);
+  tft.setCursor(20, 120);
+  tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
+  tft.print("Select2 ");
+  tft.print(indexnum);
+  indexnum++;
+  irsend.sendRaw(repeat__Copy_to_Clipboard__16, 99, 37);  // Send a raw data capture at 38kHz.
+  delay(1000);
+  tft.fillScreen(TFT_BLACK);
+  tft.setCursor(20, 120);
+  tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
+  tft.print("Help ");
+  tft.print(indexnum);
+  indexnum++;
+  irsend.sendRaw(repeat__Copy_to_Clipboard__17, 99, 37);  // Send a raw data capture at 38kHz.
+  delay(1000);
+  tft.fillScreen(TFT_BLACK);
+  tft.setCursor(20, 120);
+  tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
+  tft.print("Off/On ");
+  tft.print(indexnum);
+  indexnum++;
+  irsend.sendRaw(repeat__Copy_to_Clipboard__18, 99, 37);  // Send a raw data capture at 38kHz.
+  delay(1000);
+  tft.fillScreen(TFT_BLACK);
+  tft.setCursor(20, 120);
+  tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
+  tft.print("P Logic ");
+  tft.print(indexnum);
+  indexnum++;
+  irsend.sendRaw(repeat__Copy_to_Clipboard__19, 99, 37);  // Send a raw data capture at 38kHz.
+  delay(1000);
+  tft.fillScreen(TFT_BLACK);
+  tft.setCursor(20, 120);
+  tft.setTextColor(TFT_BLACK, TFT_GREEN, true);
+  tft.print("TEST COMPLETE");
+       
 
 }
