@@ -1,155 +1,388 @@
-/*
- * IRremoteESP8266: IRServer - demonstrates sending IR codes controlled from a webserver
- * Version 0.3 May, 2019
- * Version 0.2 June, 2017
- * Copyright 2015 Mark Szabo
- * Copyright 2019 David Conran
- *
- * An IR LED circuit *MUST* be connected to the ESP on a pin
- * as specified by kIrLed below.
- *
- * TL;DR: The IR LED needs to be driven by a transistor for a good result.
- *
- * Suggested circuit:
- *     https://github.com/crankyoldgit/IRremoteESP8266/wiki#ir-sending
- *
- * Common mistakes & tips:
- *   * Don't just connect the IR LED directly to the pin, it won't
- *     have enough current to drive the IR LED effectively.
- *   * Make sure you have the IR LED polarity correct.
- *     See: https://learn.sparkfun.com/tutorials/polarity/diode-and-led-polarity
- *   * Typical digital camera/phones can be used to see if the IR LED is flashed.
- *     Replace the IR LED with a normal LED if you don't have a digital camera
- *     when debugging.
- *   * Avoid using the following pins unless you really know what you are doing:
- *     * Pin 0/D3: Can interfere with the boot/program mode & support circuits.
- *     * Pin 1/TX/TXD0: Any serial transmissions from the ESP8266 will interfere.
- *     * Pin 3/RX/RXD0: Any serial transmissions to the ESP8266 will interfere.
- *   * ESP-01 modules are tricky. We suggest you use a module with more GPIOs
- *     for your first time. e.g. ESP-12 etc.
- */
-#include <Arduino.h>
-#if defined(ESP8266)
-#include <ESP8266WiFi.h>
-#include <ESP8266WebServer.h>
-#include <ESP8266mDNS.h>
-#endif  // ESP8266
-#if defined(ESP32)
+// Demo using arcFill to draw ellipses and a segmented elipse
+#include <TFT_eSPI.h> // Hardware-specific library
+#include <SPI.h>
 #include <WiFi.h>
-#include <WebServer.h>
-#include <ESPmDNS.h>
-#endif  // ESP32
+#include <AsyncTCP.h>
+#include <ESPAsyncWebServer.h>
+#include <AsyncElegantOTA.h>
+
+const char* ssid = "mikesnet";
+const char* password = "springchicken";
+
+AsyncWebServer server(80);
+
+TFT_eSPI tft = TFT_eSPI();       // Invoke custom library
+
 #include <IRremoteESP8266.h>
 #include <IRsend.h>
 #include <WiFiClient.h>
 
-const char* kSsid = "mikesnet";
-const char* kPassword = "springchicken";
-MDNSResponder mdns;
+IRsend irsend(8);
 
-#if defined(ESP8266)
-ESP8266WebServer server(80);
-#undef HOSTNAME
-#define HOSTNAME "esp8266"
-#endif  // ESP8266
-#if defined(ESP32)
-WebServer server(80);
-#undef HOSTNAME
-#define HOSTNAME "esp32"
-#endif  // ESP32
+#define PanasonicAddress      0x4004     // Panasonic address (Pre data) 
+#define PanasonicPower        0x100BCBD  // Panasonic Power button
 
-const uint16_t kIrLed = 8;  // ESP GPIO pin to use. Recommended: 4 (D2).
+#define JVCPower              0xC5E8
 
-IRsend irsend(kIrLed);  // Set the GPIO to be used to sending the message.
+uint16_t samsungProntoCode[72] = {
+    0x0000, 0x006D, 0x0000, 0x0022,
+    0x00ac, 0x00ac, 0x0016, 0x0040, 0x0016, 0x0040, 0x0016, 0x0040,
+    0x0016, 0x0015, 0x0016, 0x0015, 0x0016, 0x0015, 0x0016, 0x0015,
+    0x0016, 0x0015, 0x0016, 0x0040, 0x0016, 0x0040, 0x0016, 0x0040,
+    0x0016, 0x0015, 0x0016, 0x0015, 0x0016, 0x0015, 0x0016, 0x0015,
+    0x0016, 0x0015, 0x0016, 0x0040, 0x0016, 0x0015, 0x0016, 0x0015,
+    0x0016, 0x0040, 0x0016, 0x0040, 0x0016, 0x0015, 0x0016, 0x0015,
+    0x0016, 0x0040, 0x0016, 0x0015, 0x0016, 0x0040, 0x0016, 0x0040,
+    0x0016, 0x0015, 0x0016, 0x0015, 0x0016, 0x0040, 0x0016, 0x0040,
+    0x0016, 0x0015, 0x0016, 0x071c
+};
 
-void handleRoot() {
-  server.send(200, "text/html",
-              "<html>" \
-                "<head><title>" HOSTNAME " Demo </title>" \
-                "<meta http-equiv=\"Content-Type\" " \
-                    "content=\"text/html;charset=utf-8\">" \
-                "<meta name=\"viewport\" content=\"width=device-width," \
-                    "initial-scale=1.0,minimum-scale=1.0," \
-                    "maximum-scale=5.0\">" \
-                "</head>" \
-                "<body>" \
-                  "<h1>Hello from " HOSTNAME ", you can send NEC encoded IR" \
-                      "signals from here!</h1>" \
-                  "<p><a href=\"ir?code=16769055\">Send 0xFFE01F</a></p>" \
-                  "<p><a href=\"ir?code=16429347\">Send 0xFAB123</a></p>" \
-                  "<p><a href=\"ir?code=16771222\">Send 0xFFE896</a></p>" \
-                "</body>" \
-              "</html>");
-}
+// Panasonic Plasma TV Descrete code (Power On).
+// Acquired from:
+//   ftp://ftp.panasonic.com/pub/panasonic/drivers/monitors/Discrete-remote-control-codesProntoCCFformat.pdf
+// e.g.
+// 0000 0071 0000 0032 0080 003F 0010 0010 0010 0030 0010 0010 0010 0010 0010
+// 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010
+// 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010
+// 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010
+// 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010
+// 0030 0010 0030 0010 0030 0010 0030 0010 0010 0010 0010 0010 0010 0010 0030
+// 0010 0030 0010 0030 0010 0030 0010 0030 0010 0010 0010 0030 0010 0A98
+//
+// Or the equiv. of sendPanasonic64(0x400401007C7D);
+uint16_t panasonicProntoCode[104] = {
+    0x0000, 0x0071, 0x0000, 0x0032,
+    0x0080, 0x003F, 0x0010, 0x0010, 0x0010, 0x0030, 0x0010, 0x0010,
+    0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0010,
+    0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0010,
+    0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0030, 0x0010, 0x0010,
+    0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0010,
+    0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0010,
+    0x0010, 0x0030, 0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0010,
+    0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0010,
+    0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0030, 0x0010, 0x0030,
+    0x0010, 0x0030, 0x0010, 0x0030, 0x0010, 0x0030, 0x0010, 0x0010,
+    0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0030, 0x0010, 0x0030,
+    0x0010, 0x0030, 0x0010, 0x0030, 0x0010, 0x0030, 0x0010, 0x0010,
+    0x0010, 0x0030, 0x0010, 0x0A98};
 
-void handleIr() {
-  for (uint8_t i = 0; i < server.args(); i++) {
-    if (server.argName(i) == "code") {
-      uint32_t code = strtoul(server.arg(i).c_str(), NULL, 10);
-#if SEND_NEC
-      irsend.sendPanasonic(code, 32);
-#endif  // SEND_NEC
-    }
-  }
-  handleRoot();
-}
 
-void handleNotFound() {
-  String message = "File Not Found\n\n";
-  message += "URI: ";
-  message += server.uri();
-  message += "\nMethod: ";
-  message += (server.method() == HTTP_GET)?"GET":"POST";
-  message += "\nArguments: ";
-  message += server.args();
-  message += "\n";
-  for (uint8_t i = 0; i < server.args(); i++)
-    message += " " + server.argName(i) + ": " + server.arg(i) + "\n";
-  server.send(404, "text/plain", message);
-}
+uint16_t repeat__Copy_to_Clipboard_[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 65535U };
+
+// Command #2: (Copy to Clipboard)$1
+// Protocol: Panasonic, Parameters: S=0U D=160U F=62U
+uint16_t repeat__Copy_to_Clipboard__1[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 65535U };
+
+// Command #3: (Copy to Clipboard)$2
+// Protocol: Panasonic, Parameters: S=0U D=160U F=163U
+uint16_t repeat__Copy_to_Clipboard__2[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 65535U };
+
+// Command #4: (Copy to Clipboard)$3
+// Protocol: Panasonic, Parameters: S=0U D=160U F=148U
+uint16_t repeat__Copy_to_Clipboard__3[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 65535U };
+
+// Command #5: (Copy to Clipboard)$4
+// Protocol: Panasonic, Parameters: S=0U D=160U F=146U
+uint16_t repeat__Copy_to_Clipboard__4[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 65535U };
+
+// Command #6: (Copy to Clipboard)$5
+// Protocol: Panasonic, Parameters: S=0U D=176U F=129U
+uint16_t repeat__Copy_to_Clipboard__5[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 65535U };
+
+// Command #7: (Copy to Clipboard)$6
+// Protocol: Panasonic, Parameters: S=0U D=176U F=128U
+uint16_t repeat__Copy_to_Clipboard__6[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 65535U };
+
+// Command #8: (Copy to Clipboard)$7
+// Protocol: Panasonic, Parameters: S=0U D=176U F=133U
+uint16_t repeat__Copy_to_Clipboard__7[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 65535U };
+
+// Command #9: (Copy to Clipboard)$8
+// Protocol: Panasonic, Parameters: S=0U D=176U F=134U
+uint16_t repeat__Copy_to_Clipboard__8[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 65535U };
+
+// Command #10: (Copy to Clipboard)$9
+// Protocol: Panasonic, Parameters: S=0U D=176U F=135U
+uint16_t repeat__Copy_to_Clipboard__9[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 65535U };
+
+// Command #11: (Copy to Clipboard)$10
+// Protocol: Panasonic, Parameters: S=0U D=176U F=136U
+uint16_t repeat__Copy_to_Clipboard__10[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 65535U };
+
+// Command #12: (Copy to Clipboard)$11
+// Protocol: Panasonic, Parameters: S=0U D=160U F=32U
+uint16_t repeat__Copy_to_Clipboard__11[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 65535U };
+
+// Command #13: (Copy to Clipboard)$12
+// Protocol: Panasonic, Parameters: S=0U D=160U F=33U
+uint16_t repeat__Copy_to_Clipboard__12[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 65535U };
+
+// Command #14: (Copy to Clipboard)$13
+// Protocol: Panasonic, Parameters: S=0U D=160U F=50U
+uint16_t repeat__Copy_to_Clipboard__13[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 65535U };
+
+// Command #15: (Copy to Clipboard)$14
+// Protocol: Panasonic, Parameters: S=0U D=176U F=155U
+uint16_t repeat__Copy_to_Clipboard__14[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 65535U };
+
+// Command #16: (Copy to Clipboard)$15
+// Protocol: Panasonic, Parameters: S=18U D=160U F=187U
+uint16_t repeat__Copy_to_Clipboard__15[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 65535U };
+
+// Command #17: (Copy to Clipboard)$16
+// Protocol: Panasonic, Parameters: S=0U D=176U F=130U
+uint16_t repeat__Copy_to_Clipboard__16[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 65535U };
+
+// Command #18: (Copy to Clipboard)$17
+// Protocol: Panasonic, Parameters: S=0U D=160U F=57U
+uint16_t repeat__Copy_to_Clipboard__17[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 65535U };
+
+// Command #19: (Copy to Clipboard)$18
+// Protocol: Panasonic, Parameters: S=0U D=160U F=48U
+uint16_t repeat__Copy_to_Clipboard__18[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 65535U };
+
+// Command #20: (Copy to Clipboard)$19
+// Protocol: Panasonic, Parameters: S=0U D=160U F=178U
+uint16_t repeat__Copy_to_Clipboard__19[100] = { 3456U, 1728U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 1296U, 432U, 432U, 432U, 432U, 432U, 432U, 432U, 65535U };
+
+
 
 void setup(void) {
   irsend.begin();
-
   Serial.begin(115200);
-  WiFi.begin(kSsid, kPassword);
-  Serial.println("");
+    tft.init();
+  tft.setRotation(0);
+    tft.fillScreen(TFT_BLACK);
+  tft.setCursor(10, 10);
+  tft.setTextColor(TFT_WHITE, TFT_BLACK, true);
+  tft.setTextWrap(true); // Wrap on width
+  tft.setTextFont(2);
+  tft.setTextSize(1);
+  tft.print("Connecting...");
+  tft.setCursor(15, 25);
 
-  // Wait for connection
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
-  }
+  WiFi.mode(WIFI_STA);
+  WiFi.begin(ssid, password);
+      while (WiFi.status() != WL_CONNECTED) {
+        delay(250);
+        tft.print(".");
+      } 
+  tft.fillScreen(TFT_BLACK);
+  tft.setCursor(15, 10);
+  tft.print("Connected!");
+  tft.setCursor(15, 40);
+  tft.print(ssid);
+  tft.setCursor(15, 65);
+  tft.print(WiFi.localIP());
+  delay(1000);
+
   Serial.println("");
   Serial.print("Connected to ");
-  Serial.println(kSsid);
+  Serial.println(ssid);
   Serial.print("IP address: ");
-  Serial.println(WiFi.localIP().toString());
+  Serial.println(WiFi.localIP());
 
-
- mdns.begin(HOSTNAME); 
-
-    Serial.println("MDNS responder started");
-    // Announce http tcp service on port 80
-    mdns.addService("http", "tcp", 80);
-  
-
-  server.on("/", handleRoot);
-  server.on("/ir", handleIr);
-
-  server.on("/inline", [](){
-    server.send(200, "text/plain", "this works as well");
+  server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
+    request->send(200, "text/plain", "Hi! I am ESP32.");
   });
 
-  server.onNotFound(handleNotFound);
-
+  AsyncElegantOTA.begin(&server);    // Start ElegantOTA
   server.begin();
   Serial.println("HTTP server started");
+  randomSeed(analogRead(2));
+
+  tft.fillScreen(TFT_BLACK);
+	tft.setCursor(0, 0);
+	tft.setTextColor(TFT_MAGENTA);
+	tft.setTextSize(2);
+
 }
 
+
+
 void loop(void) {
-#if defined(ESP8266)
-  mdns.update();
-#endif
-  server.handleClient();
+   // tft.fillScreen(TFT_YELLOW);
+	tft.setCursor(20, 120);
+	tft.setTextColor(TFT_BLACK, TFT_YELLOW, true);
+	tft.setTextSize(2);
+  tft.print("SAMSUNG POWER");
+  Serial.println("Sending a Samsung TV 'on' command.");
+  irsend.sendPronto(samsungProntoCode, 72);
+  delay(2000);
+  tft.setCursor(20, 120);
+  tft.fillScreen(TFT_BLACK);
+  tft.setTextColor(TFT_BLACK, TFT_MAGENTA, true);
+  tft.print("PANASONIC POWER");
+  Serial.println("Sending a Panasonic Plasma TV 'on' command.");
+  irsend.sendPronto(panasonicProntoCode, 104);
+  delay(2000);
+
+
+  int indexnum = 0;
+        tft.setCursor(20, 120);
+        tft.fillScreen(TFT_BLACK);
+        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
+        tft.print("TECHNICS ");
+        tft.print(indexnum);
+        indexnum++;
+        irsend.sendRaw(repeat__Copy_to_Clipboard_, 99, 37);  // Send a raw data capture at 38kHz.
+        delay(1000);
+            tft.fillScreen(TFT_BLACK);
+            tft.setCursor(20, 120);
+        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
+        tft.print("TECHNICS ");
+        tft.print(indexnum);
+        indexnum++;
+        irsend.sendRaw(repeat__Copy_to_Clipboard__1, 99, 37);  // Send a raw data capture at 38kHz.
+        delay(1000);
+            tft.fillScreen(TFT_BLACK);
+            tft.setCursor(20, 120);
+        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
+        tft.print("TECHNICS ");
+        tft.print(indexnum);
+        indexnum++;
+        irsend.sendRaw(repeat__Copy_to_Clipboard__2, 99, 37);  // Send a raw data capture at 38kHz.
+        delay(1000);
+            tft.fillScreen(TFT_BLACK);
+            tft.setCursor(20, 120);
+        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
+        tft.print("TECHNICS ");
+        tft.print(indexnum);
+        indexnum++;
+        irsend.sendRaw(repeat__Copy_to_Clipboard__3, 99, 37);  // Send a raw data capture at 38kHz.
+        delay(1000);
+            tft.fillScreen(TFT_BLACK);
+            tft.setCursor(20, 120);
+        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
+        tft.print("TECHNICS ");
+        tft.print(indexnum);
+        indexnum++;
+        irsend.sendRaw(repeat__Copy_to_Clipboard__4, 99, 37);  // Send a raw data capture at 38kHz.
+        delay(1000);
+            tft.fillScreen(TFT_BLACK);
+            tft.setCursor(20, 120);
+        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
+        tft.print("TECHNICS ");
+        tft.print(indexnum);
+        indexnum++;
+        irsend.sendRaw(repeat__Copy_to_Clipboard__5, 99, 37);  // Send a raw data capture at 38kHz.
+        delay(1000);
+            tft.fillScreen(TFT_BLACK);
+            tft.setCursor(20, 120);
+        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
+        tft.print("TECHNICS ");
+        tft.print(indexnum);
+        indexnum++;
+        irsend.sendRaw(repeat__Copy_to_Clipboard__6, 99, 37);  // Send a raw data capture at 38kHz.
+        delay(1000);
+            tft.fillScreen(TFT_BLACK);
+            tft.setCursor(20, 120);
+        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
+        tft.print("TECHNICS ");
+        tft.print(indexnum);
+        indexnum++;
+        irsend.sendRaw(repeat__Copy_to_Clipboard__7, 99, 37);  // Send a raw data capture at 38kHz.
+        delay(1000);
+            tft.fillScreen(TFT_BLACK);
+            tft.setCursor(20, 120);
+        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
+        tft.print("TECHNICS ");
+        tft.print(indexnum);
+        indexnum++;
+        irsend.sendRaw(repeat__Copy_to_Clipboard__8, 99, 37);  // Send a raw data capture at 38kHz.
+        delay(1000);
+            tft.fillScreen(TFT_BLACK);
+            tft.setCursor(20, 120);
+        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
+        tft.print("TECHNICS ");
+        tft.print(indexnum);
+        indexnum++;
+        irsend.sendRaw(repeat__Copy_to_Clipboard__9, 99, 37);  // Send a raw data capture at 38kHz.
+        delay(1000);
+            tft.fillScreen(TFT_BLACK);
+            tft.setCursor(20, 120);
+        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
+        tft.print("TECHNICS ");
+        tft.print(indexnum);
+        indexnum++;
+        irsend.sendRaw(repeat__Copy_to_Clipboard__10, 99, 37);  // Send a raw data capture at 38kHz.
+        delay(1000);
+            tft.fillScreen(TFT_BLACK);
+            tft.setCursor(20, 120);
+        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
+        tft.print("TECHNICS ");
+        tft.print(indexnum);
+        indexnum++;
+        irsend.sendRaw(repeat__Copy_to_Clipboard__11, 99, 37);  // Send a raw data capture at 38kHz.
+        delay(1000);
+            tft.fillScreen(TFT_BLACK);
+            tft.setCursor(20, 120);
+        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
+        tft.print("TECHNICS ");
+        tft.print(indexnum);
+        indexnum++;
+        irsend.sendRaw(repeat__Copy_to_Clipboard__12, 99, 37);  // Send a raw data capture at 38kHz.
+        delay(1000);
+            tft.fillScreen(TFT_BLACK);
+            tft.setCursor(20, 120);
+        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
+        tft.print("TECHNICS ");
+        tft.print(indexnum);
+        indexnum++;
+        irsend.sendRaw(repeat__Copy_to_Clipboard__13, 99, 37);  // Send a raw data capture at 38kHz.
+        delay(1000);
+            tft.fillScreen(TFT_BLACK);
+            tft.setCursor(20, 120);
+        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
+        tft.print("TECHNICS ");
+        tft.print(indexnum);
+        indexnum++;
+        irsend.sendRaw(repeat__Copy_to_Clipboard__14, 99, 37);  // Send a raw data capture at 38kHz.
+        delay(1000);
+            tft.fillScreen(TFT_BLACK);
+            tft.setCursor(20, 120);
+        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
+        tft.print("TECHNICS ");
+        tft.print(indexnum);
+        indexnum++;
+        irsend.sendRaw(repeat__Copy_to_Clipboard__15, 99, 37);  // Send a raw data capture at 38kHz.
+        delay(1000);
+        tft.fillScreen(TFT_BLACK);
+        tft.setCursor(20, 120);
+        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
+        tft.print("TECHNICS ");
+        tft.print(indexnum);
+        indexnum++;
+        irsend.sendRaw(repeat__Copy_to_Clipboard__16, 99, 37);  // Send a raw data capture at 38kHz.
+        delay(1000);
+        tft.fillScreen(TFT_BLACK);
+        tft.setCursor(20, 120);
+        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
+        tft.print("TECHNICS ");
+        tft.print(indexnum);
+        indexnum++;
+        irsend.sendRaw(repeat__Copy_to_Clipboard__17, 99, 37);  // Send a raw data capture at 38kHz.
+        delay(1000);
+        tft.fillScreen(TFT_BLACK);
+        tft.setCursor(20, 120);
+        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
+        tft.print("TECHNICS ");
+        tft.print(indexnum);
+        indexnum++;
+        irsend.sendRaw(repeat__Copy_to_Clipboard__18, 99, 37);  // Send a raw data capture at 38kHz.
+        delay(1000);
+        tft.fillScreen(TFT_BLACK);
+        tft.setCursor(20, 120);
+        tft.setTextColor(TFT_BLACK, TFT_CYAN, true);
+        tft.print("TECHNICS ");
+        tft.print(indexnum);
+        indexnum++;
+        irsend.sendRaw(repeat__Copy_to_Clipboard__19, 99, 37);  // Send a raw data capture at 38kHz.
+        delay(1000);
+        tft.fillScreen(TFT_BLACK);
+        tft.setCursor(20, 120);
+        tft.setTextColor(TFT_BLACK, TFT_GREEN, true);
+        tft.print("TEST COMPLETE");
+        while(1);
+
 }
